@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jogos (delete)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>Apagar jogo</h1>
+    <table>
+        <tr>
+        </tr>
+        <td>ID:</td>
+        <td id="idJogo"></td>
+        <tr>
+            <td>Nome Time a:</td>
+            <td id="nomeTimeAJogo"></td>
+        </tr>
+        <tr>
+            <td>Nome Time b:</td>
+            <td id="nomeTimeBJogo"></td>
+        </tr>
+        <tr>
+            <td>Gols Time a:</td>
+            <td id="golsTimeAJogo"></td>
+        </tr>
+        <tr>
+            <td>Gols Time a:</td>
+            <td id="golsTimeBJogo"></td>
+        </tr>
+        
+        <tr>
+            <td></td>
+            <td><input type="button" onclick="apagarJogo()" value="Apagar"></td>
+        </tr>
+    </table>
+    <p style="font-weight:bold" id="mensagem"></p>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome do time a</th>
+            <th>Nome do time b</th>
+            <th>Gols do time a</th>
+            <th>Gols do time b</th>
+        </tr>
+        <tbody id="jogos">
+        </tbody>
+    </table>
+    <script>
+        const corpoTabela = document.querySelector('#jogos');
+        const paragrafoMensagem = document.querySelector('#mensagem');
+        const celulaNomeTimeA = document.querySelector('#nomeTimeAJogo');
+        const celulaNomeTimeB = document.querySelector('#nomeTimeBJogo');
+        const celulaGolsTimeA = document.querySelector('#golsTimeAJogo');
+        const celulaGolsTimeB = document.querySelector('#golsTimeBJogo');
+        const celulaID = document.querySelector('#idJogo');
+
+        function inicializar() {
+            paragrafoMensagem.innerHTML = 'Selecione um jogo:'
+            celulaID.innerHTML = '';
+            celulaNomeTimeA.innerHTML = '';
+            celulaNomeTimeB.innerHTML = '';
+            celulaGolsTimeA.innerHTML = '';
+            celulaGolsTimeB.innerHTML = '';
+            listarTodosJogos();
+        }
+
+        function selecionarJogo(id, nometimea, nometimeb, golstimea, golstimeb) {
+            paragrafoMensagem.innerHTML = 'Pressione o botão Apagar para remover o jogo.'
+            celulaID.innerHTML = id;
+            celulaNomeTimeA.innerHTML = nometimea;
+            celulaNomeTimeB.innerHTML = nometimeb;
+            celulaGolsTimeA.innerHTML = golstimea;
+            celulaGolsTimeB.innerHTML = golstimeb;
+        }
+        async function apagarJogo() {
+            if (celulaID.innerHTML == '') return;
+            const ID = celulaID.innerHTML;
+            const URL = `/api/jogos/${ID}`;
+            const deleteRequest = {
+                method: 'DELETE'
+            };
+            try {
+                fetch(URL, deleteRequest).then(resposta => inicializar());
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+
+        function preencherTabela(jogos) {
+            var linhasTabela = '';
+            var n = jogos.length;
+            for (var i = 0; i < n; i++) {
+                var jogo = jogos[i];
+                linhasTabela +=
+                    `<tr><td><a href="javascript:void(0)" onclick="selecionarjogo('${jogo.id}','${jogo.nometimea}','${jogo.nometimeb}','${jogo.golstimea}','${jogo.golstimeb}','')">` +
+                    jogo.id + '</a></td>' +
+                    '<td>' + jogo.nometimea + '</td>' +
+                    '<td>' + jogo.nometimeb + '</td>' +
+                    '<td>' + jogo.golstimea + '</td>' +
+                    '<td>' + jogo.golstimeb + '</td></tr>\n';
+            }
+            corpoTabela.innerHTML = linhasTabela;
+        }
+        async function listarTodosJogos() {
+            const URL = `/api/jogos`;
+            try {
+                fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+        inicializar();
+    </script>
+</body>
+
+</html>
