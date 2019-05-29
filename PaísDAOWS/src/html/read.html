@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Países (read)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>Países</h1>
+    <p style="font-weight:bold" id="contador"></p>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Continente</th>
+            <th>Nome</th>
+            <th>População</th>
+        </tr>
+        <tbody id="países">
+        </tbody>
+    </table>
+    <script>
+        const corpoTabela = document.querySelector('#países');
+        const contadorParagrafo = document.querySelector('#contador');
+
+        function preencherTabela(países) {
+            var linhasTabela = '';
+            var n = países.length;
+            for (var i = 0; i < n; i++) {
+                var pais = países[i];
+                linhasTabela += '<tr><td>' + pais.id + '</td>' +
+                    '<td>' + pais.continente + '</td>' +
+                    '<td>' + pais.nome + '</td>' +
+                    '<td>' + pais.populacao + '</td></tr>\n';
+            }
+            corpoTabela.innerHTML = linhasTabela;
+            contadorParagrafo.innerHTML = n + ' ' + (n == 1 ? 'pais' : 'países');
+        }
+        async function listarTodosPaíses() {
+            const URL = `/api/países`;
+            try {
+                fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+        listarTodosPaíses();
+    </script>
+</body>
+
+</html>

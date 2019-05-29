@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jogos (update)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>Atualizar Jogo</h1>
+    <table>
+        <tr>
+        </tr>
+        <td>ID:</td>
+        <td><input type="text" id="idJogo"></td>
+        <tr>
+            <td>Nome do time a:</td>
+            <td><input type="text" id="txtNomeTimeA"></td>
+        </tr>
+        <tr>
+            <td>Nome do time b:</td>
+            <td><input type="text" id="txtNomeTimeB"></td>
+        </tr>
+        <tr>
+            <td>Gols do time a:</td>
+            <td><input type="text" id="txtGolsTimeA"></td>
+        </tr>
+        <tr>
+            <td>Gols do time b:</td>
+            <td><input type="text" id="txtGolsTimeB"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" onclick="atualizarJogo()" value="Salvar"></td>
+        </tr>
+    </table>
+    <p style="font-weight:bold" id="mensagem"></p>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome do time a</th>
+            <th>Nome do time b</th>
+            <th>Gols do time a</th>
+            <th>Gols do time b</th>
+        </tr>
+        <tbody id="jogos">
+        </tbody>
+    </table>
+    <script>
+        const corpoTabela = document.querySelector('#jogos');
+        const paragrafoMensagem = document.querySelector('#mensagem');
+        const textoNomeTimeA = document.querySelector('#txtNomeTimeA');
+        const textoNomeTimeB = document.querySelector('#txtNomeTimeB');
+        const textoGolsTimeA = document.querySelector('#txtGolsTimeA');
+        const textoGolsTimeB = document.querySelector('#txtGolsTimeB');
+        const celulaID = document.querySelector('#idJogo');
+
+        function inicializar() {
+            paragrafoMensagem.innerHTML = 'Selecione um Jogo:'
+            celulaID.innerHTML = '';
+            textoNomeTimeA.value = '';
+            textoNomeTimeB.value = '';
+            textoGolsTimeA.value = '';
+            textoGolsTimeB.value = '';
+            listarTodosjogos();
+        }
+
+        function selecionarJogo(id, nomeTimeA, nomeTimeB, golsTimeA, golsTimeB) {
+            paragrafoMensagem.innerHTML = 'Altere os dados do Jogo e pressione o botão Salvar.'
+            celulaID.innerHTML = id;
+            textoNomeTimeA.value = nomeTimeA;
+            textoNomeTimeB.value = nomeTimeB;
+            textoGolsTimeA.value = golsTimeA;
+            textoGolsTimeB.value = golsTimeB;
+        }
+        async function atualizarJogo() {
+            if (celulaID.innerHTML == '') return;
+            const ID = celulaID.innerHTML;
+            const URL = `/api/jogos/${ID}`;
+            const dadosJogo = {
+                'id': ID,
+                'nomeTimeA': textoNomeTimeA.value,
+                'nomeTimeB': textoNomeTimeB.value,
+                'golsTimeA': textoGolsTimeA.value,
+                'golsTimeB': textoGolsTimeB.value
+            };
+            const putRequest = {
+                method: 'PUT',
+                body: JSON.stringify(dadosJogo),
+                headers: {
+                    'Content-type': 'application/json;charset=UTF-8'
+                }
+            };
+            try {
+                fetch(URL, putRequest).then(response => inicializar());
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+
+        function preencherTabela(jogos) {
+            var linhasTabela = '';
+            var n = jogos.length;
+            for (var i = 0; i < n; i++) {
+                var jogo = jogos[i];
+                linhasTabela += '<tr><td>' + jogo.id + '</td>' +
+                    '<td>' + jogo.nomeTimeA + '</td>' +
+                    '<td>' + jogo.nomeTimeB + '</td>' +
+                    '<td>' + jogo.golsTimeA + '</td>' +
+                    '<td>' + jogo.golsTimeB + '</td></tr>\n';
+            }
+            corpoTabela.innerHTML = linhasTabela;
+        }
+        async function listarTodosjogos() {
+            const URL = `/api/jogos`;
+            try {
+                fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+        inicializar();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jogos (read)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>jogos</h1>
+    <p style="font-weight:bold" id="contador"></p>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome do time a</th>
+            <th>Nome do time b</th>
+            <th>Gols do time a</th>
+            <th>Gols do time b</th>
+        </tr>
+        <tbody id="jogos">
+        </tbody>
+    </table>
+    <script>
+        const corpoTabela = document.querySelector('#jogos');
+        const contadorParagrafo = document.querySelector('#contador');
+
+        function preencherTabela(jogos) {
+            var linhasTabela = '';
+            var n = jogos.length;
+            for (var i = 0; i < n; i++) {
+                var jogo = jogos[i];
+                linhasTabela += '<tr><td>' + jogo.id + '</td>' +
+                    '<td>' + jogo.nomeTimeA + '</td>' +
+                    '<td>' + jogo.nomeTimeB + '</td>' +
+                    '<td>' + jogo.golsTimeA + '</td>' +
+                    '<td>' + jogo.golsTimeB + '</td></tr>\n';
+            }
+            corpoTabela.innerHTML = linhasTabela;
+            contadorParagrafo.innerHTML = n + ' ' + (n == 1 ? 'jogo' : 'jogos');
+        }
+        async function listarTodosJogos() {
+            const URL = `/api/jogos`;
+            try {
+                fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+        listarTodosJogos();
+    </script>
+</body>
+
+</html>

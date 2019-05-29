@@ -22,13 +22,13 @@ public class JogoDAO {
     
     public JogoDAO() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            this.conn = DriverManager.getConnection("jdbc:mysql://localhost/NomeDoGrupo","root","");
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            this.conn = DriverManager.getConnection("jdbc:derby://localhost:1527/NomeDoGrupo","NomeDoGrupo","nomedogrupo");
             
-            this.stmC = this.conn.prepareStatement("INSERT INTO jogos(nometimeA, nometimeB, golstimeA, golstimeB) VALUES(?,?,?,?)",
+            this.stmC = this.conn.prepareStatement("INSERT INTO jogos(nomeTimeA, nomeTimeB, golsTimeA, golsTimeB) VALUES(?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS);
             this.stmR = this.conn.prepareStatement("SELECT * FROM jogos");
-            this.stmU = this.conn.prepareStatement("UPDATE jogos SET nometimeA=?, nometimeB=?, golstimeA=?, golstimeB=? WHERE id=?");
+            this.stmU = this.conn.prepareStatement("UPDATE jogos SET nomeTimeA=?, nomeTimeB=?, golsTimeA=?, golsTimeB=? WHERE id=?");
             this.stmD = this.conn.prepareStatement("DELETE FROM jogos WHERE id=?");
         }catch(Exception e) {
             e.printStackTrace();
@@ -52,10 +52,10 @@ public class JogoDAO {
             while(rs.next()) {
                 Jogo j = new Jogo();
                 j.setId(rs.getInt("id"));
-                j.setNomeTimeA(rs.getString("nometimeA"));
-                j.setNomeTimeB(rs.getString("nometimeB"));
-                j.setGolsTimeA(rs.getInt("golstimeA"));
-                j.setGolsTimeB(rs.getInt("golstimeB"));
+                j.setNomeTimeA(rs.getString("nomeTimeA"));
+                j.setNomeTimeB(rs.getString("nomeTimeB"));
+                j.setGolsTimeA(rs.getInt("golsTimeA"));
+                j.setGolsTimeB(rs.getInt("golsTimeB"));
                 
                 jogos.add(j);
             }

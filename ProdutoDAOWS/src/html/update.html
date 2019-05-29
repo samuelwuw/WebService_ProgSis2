@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jogos (update)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>Atualizar Produto</h1>
+    <table>
+        <tr>
+        </tr>
+        <td>ID:</td>
+        <td id="idProduto"></td>
+        <tr>
+            <td>Descrição:</td>
+            <td><input type="text" id="txtDescricao"></td>
+        </tr>
+        <tr>
+            <td>Marca:</td>
+            <td><input type="text" id="txtMarca"></td>
+        </tr>
+        <tr>
+            <td>Preço:</td>
+            <td><input type="text" id="txtPreco"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" onclick="atualizarProduto()" value="Salvar"></td>
+        </tr>
+    </table>
+    <p style="font-weight:bold" id="mensagem"></p>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Descrição</th>
+            <th>Marca</th>
+            <th>Preço</th>
+        </tr>
+        <tbody id="produtos">
+        </tbody>
+    </table>
+    <script>
+        const corpoTabela = document.querySelector('#produtos');
+        const paragrafoMensagem = document.querySelector('#mensagem');
+        const textoDescricao = document.querySelector('#txtDescricao');
+        const textoMarca = document.querySelector('#txtMarca');
+        const textoPreco = document.querySelector('#txtPreco');
+        const celulaID = document.querySelector('#idProduto');
+
+        function inicializar() {
+            paragrafoMensagem.innerHTML = 'Selecione um Produto:'
+            celulaID.innerHTML = '';
+            textoDescricao.value = '';
+            textoMarca.value = '';
+            textoPreco.value = '';
+            listarTodosProdutos();
+        }
+
+        function selecionarProduto(id, descricao, marca, preco) {
+            paragrafoMensagem.innerHTML = 'Altere os dados do Produto e pressione o botão Salvar.'
+            celulaID.innerHTML = id;
+            textoDescricao.value = descricao;
+            textoMarca.value = marca;
+            textoPreco.value = preco;
+        }
+        async function atualizarProduto() {
+            if (celulaID.innerHTML == '') return;
+            const ID = celulaID.innerHTML;
+            const URL = `/api/produtos/${ID}`;
+            const dadosProduto = {
+                'id': ID,
+                'descricao': textoDescricao.value,
+                'marca': textoMarca.value,
+                'preco': textoPreco.value
+            };
+            const putRequest = {
+                method: 'PUT',
+                body: JSON.stringify(dadosProduto),
+                headers: {
+                    'Content-type': 'application/json;charset=UTF-8'
+                }
+            };
+            try {
+                fetch(URL, putRequest).then(response => inicializar());
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+
+        function preencherTabela(produtos) {
+            var linhasTabela = '';
+            var n = produtos.length;
+            for (var i = 0; i < n; i++) {
+                var Produto = Produtos[i];
+                linhasTabela +=
+                    `<tr><td><a href="javascript:void(0)" onclick="selecionarProduto('${Produto.id}','${Produto.nometimea}','${Produto.nometimeb}','${Produto.golstimea}','${Produto.golstimeb}')">` +
+                    Produto.id + '</a></td>' +
+                    `<td>${Produto.descricao}</td>` +
+                    `<td>${Produto.marca}</td>` +
+                    `<td>${Produto.preco}</td></tr>\n`;
+            }
+            corpoTabela.innerHTML = linhasTabela;
+        }
+        async function listarTodosProdutos() {
+            const URL = `/api/produtos`;
+            try {
+                fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+        inicializar();
+    </script>
+</body>
+
+</html>

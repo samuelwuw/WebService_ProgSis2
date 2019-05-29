@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jogos (read)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>produtos</h1>
+    <p style="font-weight:bold" id="contador"></p>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Descrição</th>
+            <th>Marca</th>
+            <th>Preço</th>
+        </tr>
+        <tbody id="produtos">
+        </tbody>
+    </table>
+    <script>
+        const corpoTabela = document.querySelector('#produtos');
+        const contadorParagrafo = document.querySelector('#contador');
+
+        function preencherTabela(produtos) {
+            var linhasTabela = '';
+            var n = produtos.length;
+            for (var i = 0; i < n; i++) {
+                var produto = produtos[i];
+                linhasTabela += '<tr><td>' + produto.id + '</td>' +
+                    '<td>' + produto.descricao + '</td>' +
+                    '<td>' + produto.marca + '</td>' +
+                    '<td>' + produto.preco + '</td></tr>\n';
+            }
+            corpoTabela.innerHTML = linhasTabela;
+            contadorParagrafo.innerHTML = n + ' ' + (n == 1 ? 'produto' : 'produtos');
+        }
+        async function listarTodosJogos() {
+            const URL = `/api/produtos`;
+            try {
+                fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+        listarTodosJogos();
+    </script>
+</body>
+
+</html>

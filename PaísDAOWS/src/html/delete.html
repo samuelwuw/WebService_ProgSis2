@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Países (delete)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>Apagar País</h1>
+    <table>
+        <tr>
+        </tr>
+        <td>ID:</td>
+        <td id="idPaís"></td>
+        <tr>
+            <td>Continente:</td>
+            <td id="ContinentePaís"></td>
+        </tr>
+        <tr>
+            <td>Nome:</td>
+            <td id="NomePaís"></td>
+        </tr>
+        <tr>
+            <td>População:</td>
+            <td id="PopulacaoPaís"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" onclick="apagarPaís()" value="Apagar"></td>
+        </tr>
+    </table>
+    <p style="font-weight:bold" id="mensagem"></p>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Continente</th>
+            <th>Nome</th>
+            <th>População</th>
+        </tr>
+        <tbody id="países">
+        </tbody>
+    </table>
+    <script>
+        const corpoTabela = document.querySelector('#países');
+        const paragrafoMensagem = document.querySelector('#mensagem');
+        const celulaContinente = document.querySelector('#ContinentePaís');
+        const celulaNome = document.querySelector('#NomePaís');
+        const celulaPopulacao = document.querySelector('#PopulacaoPaís');
+        const celulaID = document.querySelector('#idPaís');
+
+        function inicializar() {
+            paragrafoMensagem.innerHTML = 'Selecione um país:'
+            celulaID.innerHTML = '';
+            celulaContinente.innerHTML = '';
+            celulaNome.innerHTML = '';
+            celulaPopulacao.innerHTML = '';
+            listarTodospaíses();
+        }
+
+        function selecionarPaís(id, continente, nome, populacao) {
+            paragrafoMensagem.innerHTML = 'Pressione o botão Apagar para remover o país.'
+            celulaID.innerHTML = id;
+            celulaContinente.innerHTML = continente;
+            celulaNome.innerHTML = nome;
+            celulaPopulacao.innerHTML = populacao;
+        }
+        async function apagarPaís() {
+            if (celulaID.innerHTML == '') return;
+            const ID = celulaID.innerHTML;
+            const URL = `/api/países/${ID}`;
+            const deleteRequest = {
+                method: 'DELETE'
+            };
+            try {
+                fetch(URL, deleteRequest).then(resposta => inicializar());
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+
+        function preencherTabela(países) {
+            var linhasTabela = '';
+            var n = países.length;
+            for (var i = 0; i < n; i++) {
+                var país = países[i];
+                linhasTabela +=
+                    `<tr><td><a href="javascript:void(0)" onclick="selecionarpaís('${país.id}','${país.continente}','${país.nome}','${país.populacao}')">` +
+                    país.id + '</a></td>' +
+                    '<td>' + país.continente + '</td>' +
+                    '<td>' + país.nome + '</td>' +
+                    '<td>' + país.populacao + '</td></tr>\n';
+            }
+            corpoTabela.innerHTML = linhasTabela;
+        }
+        async function listarTodosPaíses() {
+            const URL = `/api/países`;
+            try {
+                fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+        inicializar();
+    </script>
+</body>
+
+</html>

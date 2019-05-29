@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jogos (create)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>Novo jogo</h1>
+    <table>
+        <tr>
+            <td>Nome do time a:</td>
+            <td><input type="text" id="txtNomeTimeA"></td>
+        </tr>
+        <tr>
+            <td>Nome do time b:</td>
+            <td><input type="text" id="txtNomeTimeB"></td>
+        </tr>
+        <tr>
+            <td>Gols do time a:</td>
+            <td><input type="text" id="txtGolsTimeA"></td>
+        </tr>
+        <tr>
+            <td>Gols do time b:</td>
+            <td><input type="text" id="txtGolsTimeB"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" onclick="criarJogo()" value="Criar"></td>
+        </tr>
+    </table>
+    <p style="font-weight:bold" id="mensagem"></p>
+    <script>
+        const textoNomeTimeA = document.querySelector('#txtNomeTimeA');
+        const textoNomeTimeB = document.querySelector('#txtNomeTimeB');
+        const textoGolsTimeA = document.querySelector('#txtGolsTimeA');
+        const textoGolsTimeB = document.querySelector('#txtGolsTimeB');
+        const paragrafoMensagem = document.querySelector('#mensagem');
+
+        function mostrarMensagem(JogoCadastrado) {
+            textoNomeTimeA.value = '';
+            textoNomeTimeB.value = '';
+            textoGolsTimeA.value = '';
+            textoGolsTimeB.value = '';
+            paragrafoMensagem.innerHTML = 'Jogo criado com id ' + JogoCadastrado.id;
+        }
+        async function criarJogo() {
+            const URL = `/api/jogos`;
+            const dadosJogo = {
+                'nomeTimeA': textoNomeTimeB.value,
+                'nomeTimeB': textoNomeTimeA.value,
+                'golsTimeA': textoGolsTimeA.value,
+                'golsTimeB': textoGolsTimeB.value
+            };
+            const postRequest = {
+                method: 'POST',
+                body: JSON.stringify(dadosJogo),
+                headers: {
+                    'Content-type': 'application/json;charset=UTF-8'
+                }
+            };
+            try {
+                fetch(URL, postRequest).then(resposta => resposta.json()).then(jsonResponse => mostrarMensagem(jsonResponse));
+            } catch (e) {
+                paragrafoMensagem.innerHTML = e;
+            }
+        }
+    </script>
+</body>
+
+</html>

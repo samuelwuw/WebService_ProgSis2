@@ -19,8 +19,7 @@ public class RestApp extends Application<Configuration> {
 
     @Override
     public void run(Configuration configuration, Environment environment) {
-        ConexaoJavaDB conexao = new ConexaoJavaDB("root", "", "jdbc:mysql://localhost", 3306, "NomeDoGrupo");
-        JogoDAO JogoDAO = new JogoDAO(conexao);
+        JogoDAO JogoDAO = new JogoDAO();
         environment.jersey().register(new JogoResource(JogoDAO));
         environment.jersey().setUrlPattern("/api/*");
     }

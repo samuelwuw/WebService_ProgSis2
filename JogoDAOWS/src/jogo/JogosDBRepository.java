@@ -104,10 +104,10 @@ public class JogosDBRepository implements JogoRepository {
             }
 
             resposta.setId(id);
-            resposta.setNomeTimeA(rs.getString("nometimeA"));
-            resposta.setNomeTimeB(rs.getString("nometimeB"));
-            resposta.setGolsTimeA(rs.getInt("golstimeA"));
-            resposta.setGolsTimeB(rs.getInt("golstimeB"));
+            resposta.setNomeTimeA(rs.getString("nometimea"));
+            resposta.setNomeTimeB(rs.getString("nometimeb"));
+            resposta.setGolsTimeA(rs.getInt("golstimea"));
+            resposta.setGolsTimeB(rs.getInt("golstimeb"));
 
             conn.close();
             return resposta;

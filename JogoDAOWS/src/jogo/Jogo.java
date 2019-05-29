@@ -3,17 +3,17 @@ package jogo;
 public class Jogo {
 
     private int id;
-    private String nometimeA;
-    private String nometimeB;
-    private int golstimeA;
-    private int golstimeB;
+    private String nomeTimeA;
+    private String nomeTimeB;
+    private int golsTimeA;
+    private int golsTimeB;
 
     public Jogo() {
         this.id = 1;
-        this.nometimeA = "";
-        this.nometimeB = "";
-        this.golstimeA = 0;
-        this.golstimeB = 0;
+        this.nomeTimeA = "";
+        this.nomeTimeB = "";
+        this.golsTimeA = 0;
+        this.golsTimeB = 0;
     }
 
     public void setId(int id) {
@@ -24,36 +24,36 @@ public class Jogo {
         return this.id;
     }
 
-    public void setNomeTimeA(String nometimeA) {
-        this.nometimeA = nometimeA;
+    public void setNomeTimeA(String nomeTimeA) {
+        this.nomeTimeA = nomeTimeA;
     }
 
     public String getNomeTimeA() {
-        return this.nometimeA;
+        return this.nomeTimeA;
     }
 
-    public void setNomeTimeB(String nometimeB) {
-        this.nometimeB = nometimeB;
+    public void setNomeTimeB(String nomeTimeB) {
+        this.nomeTimeB = nomeTimeB;
     }
 
     public String getNomeTimeB() {
-        return this.nometimeB;
+        return this.nomeTimeB;
     }
 
-    public void setGolsTimeA(int golstimeA) {
-        this.golstimeA = golstimeA;
+    public void setGolsTimeA(int golsTimeA) {
+        this.golsTimeA = golsTimeA;
     }
 
     public int getGolsTimeA() {
-        return golstimeA;
+        return golsTimeA;
     }
 
-    public void setGolsTimeB(int golstimeB) {
-        this.golstimeB = golstimeB;
+    public void setGolsTimeB(int golsTimeB) {
+        this.golsTimeB = golsTimeB;
     }
 
     public int getGolsTimeB() {
-        return golstimeB;
+        return golsTimeB;
     }
 
 }

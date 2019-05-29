@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jogos (create)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>Novo Produto</h1>
+    <table>
+        <tr>
+            <td>Descrição:</td>
+            <td><input type="text" id="txtDescricao"></td>
+        </tr>
+        <tr>
+            <td>Marca:</td>
+            <td><input type="text" id="txtMarca"></td>
+        </tr>
+        <tr>
+            <td>Preço:</td>
+            <td><input type="text" id="txtPreco"></td>
+        </tr>
+    </table>
+    <p style="font-weight:bold" id="mensagem"></p>
+    <script>
+        const descricao = document.querySelector('#txtDescricao');
+        const marca = document.querySelector('#txtmarca');
+        const preco = document.querySelector('#txtPreco');
+        const paragrafoMensagem = document.querySelector('#mensagem');
+
+        function mostrarMensagem(ProdutoCadastrado) {
+            textoNome.value = '';
+            textoMatricula.value = '';
+            paragrafoMensagem.innerHTML = 'Produto criado com id ' + ProdutoCadastrado.id;
+        }   
+        async function criarProduto() {
+            const URL = `/api/produto`;
+            const dadosProduto = {
+                'descricao': textoDescricao.value,
+                'marca': textoMarca.value,
+                'preco': textoPreco.value
+            };
+            const postRequest = {
+                method: 'POST',
+                body: JSON.stringify(dadosProduto),
+                headers: {
+                    'Content-type': 'application/json;charset=UTF-8'
+                }
+            };
+            try {
+                fetch(URL, postRequest).then(resposta => resposta.json()).then(jsonResponse => mostrarMensagem(jsonResponse));
+            } catch (e) {
+                paragrafoMensagem.innerHTML = e;
+            }
+        }
+    </script>
+</body>
+
+</html>
