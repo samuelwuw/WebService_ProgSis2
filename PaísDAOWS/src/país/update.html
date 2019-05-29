@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Países (update)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>Atualizar País</h1>
+    <table>
+        <tr>
+        </tr>
+        <td>ID:</td>
+        <td id="idPaís"></td>
+        <tr>
+            <td>Continente:</td>
+            <td><input type="text" id="txtContinente"></td>
+        </tr>
+        <tr>
+            <td>Nome:</td>
+            <td><input type="text" id="txtNome"></td>
+        </tr>
+        <tr>
+            <td>População:</td>
+            <td><input type="text" id="txtPopulacao"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" onclick="atualizarPaís()" value="Salvar"></td>
+        </tr>
+    </table>
+    <p style="font-weight:bold" id="mensagem"></p>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Continente</th>
+            <th>Nome</th>
+            <th>População</th>
+        </tr>
+        <tbody id="países">
+        </tbody>
+    </table>
+    <script>
+        const corpoTabela = document.querySelector('#países');
+        const paragrafoMensagem = document.querySelector('#mensagem');
+        const textoContinente = document.querySelector('#txtContinente');
+        const textoNome = document.querySelector('#txtNome');
+        const textoPopulacao = document.querySelector('#txtPopulacao');
+        const celulaID = document.querySelector('#idPaís');
+
+        function inicializar() {
+            paragrafoMensagem.innerHTML = 'Selecione um País:'
+            celulaID.innerHTML = '';
+            textoContinente.value = '';
+            textoNome.value = '';
+            textoPopulacao.value = '';
+            listarTodosPaíses();
+        }
+
+        function selecionarPaís(id, continente, nome, populacao) {
+            paragrafoMensagem.innerHTML = 'Altere os dados do País e pressione o botão Salvar.'
+            celulaID.innerHTML = id;
+            textoContinente.value = continente;
+            textoNome.value = nome;
+            textoPopulacao.value = populacao;
+        }
+        async function atualizarPaís() {
+            if (celulaID.innerHTML == '') return;
+            const ID = celulaID.innerHTML;
+            const URL = `/api/Países/${ID}`;
+            const dadosPaís = {
+                'id': ID,
+                'Continente': textoContinente.value,
+                'Nome': textoNome.value,
+                'Populacao': textoPopulacao.value,
+            };
+            const putRequest = {
+                method: 'PUT',
+                body: JSON.stringify(dadosPaís),
+                headers: {
+                    'Content-type': 'application/json;charset=UTF-8'
+                }
+            };
+            try {
+                fetch(URL, putRequest).then(response => inicializar());
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+
+        function preencherTabela(Paíss) {
+            var linhasTabela = '';
+            var n = Paíss.length;
+            for (var i = 0; i < n; i++) {
+                var País = Paíss[i];
+                linhasTabela +=
+                    `<tr><td><a href="javascript:void(0)" onclick="selecionarPaís('${País.id}','${País.continente}','${País.nome}','${País.populacao}')">` +
+                    País.id + '</a></td>' +
+                    `<td>${País.continente}</td>` +
+                    `<td>${País.nome}</td>` +
+                    '<td>' + País.populacao + '</td></tr>\n';
+            }
+            corpoTabela.innerHTML = linhasTabela;
+        }
+        async function listarTodosPaíses() {
+            const URL = `/api/Países`;
+            try {
+                fetch(URL).then(resposta => resposta.json()).then(jsonResponse => preencherTabela(jsonResponse));
+            } catch (e) {
+                corpoTabela.innerHTML = e;
+            }
+        }
+        inicializar();
+    </script>
+</body>
+
+</html>

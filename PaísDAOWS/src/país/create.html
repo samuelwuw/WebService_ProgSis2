@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Países (create)</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <p><a href="index.html">&lt; Voltar para página inicial</a></p>
+    <h1>Novo País</h1>
+    <table>
+        <tr>
+            <td>Continente:</td>
+            <td><input type="text" id="txtContinente"></td>
+        </tr>
+        <tr>
+            <td>Nome:</td>
+            <td><input type="text" id="txtNome"></td>
+        </tr>
+        <tr>
+            <td>População:</td>
+            <td><input type="text" id="txtPopulacao"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" onclick="criarPaís()" value="Criar"></td>
+        </tr>
+    </table>
+    <p style="font-weight:bold" id="mensagem"></p>
+    <script>
+        const textoContinente = document.querySelector('#txtContinente');
+        const textoNome = document.querySelector('#txtNome');
+        const textoPopulacao = document.querySelector('#txtPopulacao');
+        const paragrafoMensagem = document.querySelector('#mensagem');
+
+        function mostrarMensagem(PaísCadastrado) {
+            textoContinente.value = '';
+            textoNome.value = '';
+            textoPopulacao.value = '';
+            paragrafoMensagem.innerHTML = 'País criado com id ' + PaísCadastrado.id;
+        }
+        async function criarPaís() {
+            const URL = `/países`;
+            const dadosPaís = {
+                'continente': textoNome.value,
+                'nome': textoContinente.value,
+                'populacao': textoPopulacao.value
+            };
+            const postRequest = {
+                method: 'POST',
+                body: JSON.stringify(dadosPaís),
+                headers: {
+                    'Content-type': 'application/json;charset=UTF-8'
+                }
+            };
+            try {
+                fetch(URL, postRequest).then(resposta => resposta.json()).then(jsonResponse => mostrarMensagem(jsonResponse));
+            } catch (e) {
+                paragrafoMensagem.innerHTML = e;
+            }
+        }
+    </script>
+</body>
+
+</html>
